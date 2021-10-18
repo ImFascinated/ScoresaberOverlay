@@ -22,8 +22,7 @@
 
         // who to compare your scores with o.O
         comparison_ids: [
-          "76561198858351567",
-          "76561198389705676"
+          "76561198827283834"
         ]
       }
 
@@ -69,7 +68,7 @@
 
                 comparisonDiv.innerHTML += 
                 `
-                <p class="comparison-text">${playerInfo.playerName} is ${ppDifference.toFixed(2)}pp ${isAhead ? "ahead" : "behind"}</p>
+                <p class="comparison-text">${playerInfo.playerName} is ${ppDifference.toFixed(2).toLocaleString()}pp ${isAhead ? "ahead" : "behind"}</p>
                 `
               })
             });

@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+* {
+	font-family: 'Roboto', sans-serif;
+	font-size: 27px;
+	color: white;
+	position: relative;
+}
+
+.text {
+	margin: 4px 8px;
+}
+
+.comparison {
+	text-align: right;
+	top: -110px;
+}
+
+.comparison-text {
+	margin: 0px 8px 4px;
+}

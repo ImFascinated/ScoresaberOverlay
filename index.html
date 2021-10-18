@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scoresaber Overlay</title>
+    <link rel="stylesheet" href="./style.css">
+  </head>
+	<body onload="init()">
+    <div class="overlay">
+      <p class="text" id="player-pp">0pp</p>
+      <p class="text" id="country-position">#0000</p>
+      <p class="text" id="global-position">#0000</p>
+
+      <div id="comparison" class="comparison" />
+    </div>
+
+		<script>
+      const OPTIONS = {
+        scoresaber_api: "https://new.scoresaber.com/api/",
+        my_scoresaber: "76561198449412074",
+
+        // who to compare your scores with o.O
+        comparison_ids: [
+          "76561198858351567",
+          "76561198389705676"
+        ]
+      }
+
+      function init() {
+        console.log("Loading...")
+
+        updateData();
+        // Updates the data every 30 seconds
+        setTimeout(() => updateData(), 30_000);
+      }
+
+      async function updateData() {
+        console.log("Updating data!")
+        fetch(`${OPTIONS.scoresaber_api}player/${OPTIONS.my_scoresaber}/full`).then(async data => {
+          const json = await data.json();
+          const playerInfo = json.playerInfo;
+
+          const pp = playerInfo.pp;
+          const country = playerInfo.country;
+          const countryRank = playerInfo.countryRank;
+          const rank = playerInfo.rank;
+
+          const playerPPUI = document.getElementById("player-pp");
+          const countryPositionUI = document.getElementById("country-position");
+          const globalPositionUI = document.getElementById("global-position");
+
+          playerPPUI.innerHTML = `${pp.toLocaleString()}pp`
+          countryPositionUI.innerHTML = `#${countryRank.toLocaleString()} ${country.toUpperCase()}`
+          globalPositionUI.innerHTML = `#${rank.toLocaleString()}`
+
+          if (OPTIONS.comparison_ids.length > 0) {
+            const comparisonDiv = document.getElementById("comparison");  
+            comparisonDiv.innerHTML = "";
+
+            OPTIONS.comparison_ids.forEach(id => {
+              console.log("Fetching comparison data for " + id)
+              fetch(`${OPTIONS.scoresaber_api}player/${id}/full`).then(async data => {
+                const json = await data.json();
+                const playerInfo = json.playerInfo;
+
+                const isAhead = pp < playerInfo.pp
+                const ppDifference = playerInfo.pp - pp < 0 ? (playerInfo.pp - pp) * -1 : playerInfo.pp - pp
+
+                comparisonDiv.innerHTML += 
+                `
+                <p class="comparison-text">${playerInfo.playerName} is ${ppDifference.toFixed(2)}pp ${isAhead ? "ahead" : "behind"}</p>
+                `
+              })
+            });
+          }
+        });
+      }
+    </script>
+	</body>
+</html>
